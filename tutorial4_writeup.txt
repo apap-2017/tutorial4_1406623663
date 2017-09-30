@@ -1,0 +1,36 @@
+tutorial4_writeup.txt
+
+Dalam membuat fitur delete saya memodifikasi tempalte sebagai berikut:
+1. saya menambah code dibawah ini pada StudentController
+ @RequestMapping("/student/delete/{npm}")
+    public String delete (Model model, @PathVariable(value = "npm") String npm)
+    {
+		 StudentModel student = studentDAO.selectStudent (npm);
+
+        if (student != null) {
+            studentDAO.deleteStudent (npm);
+            return "delete";
+        } else {
+            model.addAttribute ("npm", npm);
+            return "not-found";
+        }
+    }
+code ini guna untuk mengecek apakah npm yang dimasukkan tsb terdaftar di db atau tidak
+
+2. Pada StudentServiceDatabase
+	@Override
+    public  void deleteStudent (String npm)
+    {
+    	 	log.info ("student " + npm + "deleted ");
+        studentMapper.deleteStudent(npm);
+    }
+code ini berguna dalam mengimplementasi interface dari StudentService, agar method2nya dapat memanggilmethodnya mapper sehingga mapper dapat jalanin sqlnya
+
+3. Pada StudentService: untuk mengoperasikan delete oleh student
+void deleteStudent(String npm);
+
+4. Pada studentMapper sbg penghubung ke db sehingga dapat menghapus data di db
+@Delete("delete from student where npm = #{npm}")
+    void deleteStudent(String npm);
+
+Selain itu juga saya menghadapi beberapa kendala seperti template yang error di environment saya, setelah beratnay ke beberapa asdos dan teman mereka berpendapat jika eclipse saya mengalamin permasalahan dan pada sawalnya lombok juga tidak terrecognize di eclipse. Sehingga dikarenkan hal tersebut menjadi hambatan dan penghalang selama pengerjaan tutorial4 ini.
